@@ -23,12 +23,12 @@ def main():
         | llm
         | custom_parser
     )
-    agent_executor = AgentExecutor(agent=agent, 
-                                   tools=tools,
-                                   memory=memory, 
-                                   return_intermediate_steps=SHOW_INTERMEDIATE_STEPS,
-                                   handle_parsing_errors=True,
-                                   verbose=False
+    agent_executor = AgentExecutor(agent = agent, 
+                                   tools = tools,
+                                   memory = memory, 
+                                   return_intermediate_steps = SHOW_INTERMEDIATE_STEPS,
+                                   handle_parsing_errors = True,
+                                   verbose = True
                                    )
     while True:
         user_input = input("问题：").strip()
@@ -43,7 +43,7 @@ def main():
             continue
         try:
             result = agent_executor.invoke({"input": user_input})
-            print(result)
+            # print(result)
             if SHOW_INTERMEDIATE_STEPS and "intermediate_steps" in result and result["intermediate_steps"]:
                 print("\n中间步骤:")
                 for i, (action, observation) in enumerate(result["intermediate_steps"], 1):

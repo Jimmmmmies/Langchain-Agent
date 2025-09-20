@@ -1,5 +1,6 @@
 import requests
 from langchain_core.tools import tool
+from ddgs import DDGS
 
 @tool
 def getweather(location):
@@ -19,5 +20,26 @@ def getweather(location):
         return weather
     else:
         raise Exception(f"获取天气失败{response.status_code}")
-    
-tools = [getweather]
+
+@tool
+def search(query, search_type = "text"):
+    """使用DuckDuckGo搜索信息"""
+    ddgs = DDGS()
+    params = {
+        "query" : query,
+        "region" : "cn-zh",
+        "safesearch" : "off",
+        "max_results" : 10,
+        "timelimit" : None
+    }
+    if search_type == "images":
+        results = ddgs.images(**params)
+    elif search_type == "videos":
+        results = ddgs.videos(**params)
+    elif search_type == "news":
+        results = ddgs.news(**params)
+    else:
+        results = ddgs.text(**params)
+    return results
+
+tools = [getweather, search]
