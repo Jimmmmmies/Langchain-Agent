@@ -33,15 +33,14 @@ json格式要求：
 }}
 
 开始！
-用户的输入：{input}
 请严格按照json的格式回答
 """
 
 prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "你是一个乐于助人的AI助手，可以使用工具解决用户问题。"),
+        ("system", promptTemplate),
         MessagesPlaceholder(variable_name="chat_history"),
-        ("user", promptTemplate),
+        ("user", "{input}"),
         MessagesPlaceholder(variable_name="agent_scratchpad"),
     ]
 )
