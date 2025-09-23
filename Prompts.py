@@ -1,6 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools.render import render_text_description
-from Tools import tools
 
 promptTemplate = """
 身份：你是由Jimmmmmies创造出来的ReAct智能助理，你的任务是帮助用户解决问题并执行必要的操作。
@@ -71,16 +70,19 @@ json格式要求：
 请严格按照json的格式回答
 """
 
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", promptTemplate),
-        MessagesPlaceholder(variable_name="chat_history"),
-        ("user", "{input}"),
-        MessagesPlaceholder(variable_name="agent_scratchpad"),
-    ]
-)
+def create_prompt(tools):
+    """根据工具列表创建提示词模版"""
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", promptTemplate),
+            MessagesPlaceholder(variable_name="chat_history"),
+            ("user", "{input}"),
+            MessagesPlaceholder(variable_name="agent_scratchpad"),
+        ]
+    )
 
-prompt = prompt.partial(
-    tools = render_text_description(tools),
-    tool_names = ', '.join([tool.name for tool in tools])
-)
+    prompt = prompt.partial(
+        tools = render_text_description(tools),
+        tool_names = ', '.join([tool.name for tool in tools])
+    )
+    return prompt

@@ -2,11 +2,11 @@ from langchain.memory import ConversationBufferMemory
 from langchain.agents import AgentExecutor
 from langchain_core.runnables import RunnablePassthrough
 from Configs import MEMORY_CONFIG, SHOW_INTERMEDIATE_STEPS
-from Prompts import prompt
+from Prompts import create_prompt
 from Setmodel import llm
 from ToolResponse import format_log_message, TEMPLATE_TOOL_RESPONSE
-from Parser import JSONOutputParser
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from Parser import JSONOutputParser
 import asyncio
 
 async def run_agent():
@@ -23,9 +23,16 @@ async def run_agent():
                 "command" : "python",
                 "args" : ["Servers/Search.py"],
                 "transport" : "stdio"
+            },
+            "leetcode" : {
+            "command" : "npx",
+            "args" : ["-y", "@jinzcdev/leetcode-mcp-server", "--site", "cn"],
+            "transport" : "stdio"
             }
         }
     )
+    mcp_tool_list = await client.get_tools()
+    prompt = create_prompt(mcp_tool_list)
     agent = (
         RunnablePassthrough.assign(
             agent_scratchpad = lambda x : format_log_message(
@@ -38,7 +45,6 @@ async def run_agent():
         | llm
         | custom_parser
     )
-    mcp_tool_list = await client.get_tools()
     agent_executor = AgentExecutor(
         agent = agent, 
         tools = mcp_tool_list,

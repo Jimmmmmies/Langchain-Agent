@@ -2,7 +2,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.agents import AgentExecutor
 from langchain_core.runnables import RunnablePassthrough
 from Configs import MEMORY_CONFIG, SHOW_INTERMEDIATE_STEPS
-from Prompts import prompt
+from Prompts import create_prompt
 from Tools import tools
 from Setmodel import llm
 from ToolResponse import format_log_message, TEMPLATE_TOOL_RESPONSE
@@ -11,6 +11,7 @@ from Parser import JSONOutputParser
 def main():
     memory = ConversationBufferMemory(**MEMORY_CONFIG)
     custom_parser = JSONOutputParser()
+    prompt = create_prompt(tools)
     agent = (
         RunnablePassthrough.assign(
             agent_scratchpad = lambda x : format_log_message(

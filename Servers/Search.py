@@ -1,7 +1,7 @@
 from mcp.server.fastmcp import FastMCP
 from ddgs import DDGS
 
-mcp = FastMCP("Search service")
+mcp = FastMCP("Search service", log_level = "ERROR")
 
 @mcp.tool()
 def search(query, search_type = "text"):

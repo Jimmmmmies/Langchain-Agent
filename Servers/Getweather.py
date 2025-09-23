@@ -1,7 +1,7 @@
 import requests
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("Weather service")
+mcp = FastMCP("Weather service", log_level = "ERROR")
 
 @mcp.tool()
 async def getweather(location: str) -> dict:
